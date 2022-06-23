@@ -10,6 +10,7 @@ int s21_create_matrix(int rows, int columns, matrix_t *result) {
     result->matrix[i] = calloc(columns, sizeof(double));
     if (!result->matrix[i]) {
       while (--i >= 0) free(result->matrix[i]);
+      free(result->matrix);
       exit(0);
     }
   }
