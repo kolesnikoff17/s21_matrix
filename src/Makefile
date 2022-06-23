@@ -2,7 +2,7 @@ CC = gcc
 
 #  УБРАТЬ САНИТАЙЗ ПЕРЕД СДАЧЕЙ
 
-CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -g
 GCOV_FLAGS := -fprofile-arcs -ftest-coverage
 LDFLAGS := -fprofile-arcs --coverage
 LCHECK = -lcheck -lgmp
