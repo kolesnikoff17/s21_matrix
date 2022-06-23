@@ -10,10 +10,11 @@ int check_matrix(matrix_t* a) {
   return res;
 }
 
-void print_matrix(matrix_t* a) {
-  for (int i = 0; i < a->rows; ++i)
-    for (int j = 0; j < a->columns; ++j) {
-      printf("%lf ", a->matrix[i][j]);
-      if (j == a->rows - 1) putc('\n', stdin);
-    }
-}
+// void print_matrix(matrix_t* a) {
+//   printf("\n");
+//   for (int i = 0; i < a->rows; ++i)
+//     for (int j = 0; j < a->columns; ++j) {
+//       printf("%lf ", a->matrix[i][j]);
+//       if (j == a->columns - 1) printf("\n");
+//     }
+// }

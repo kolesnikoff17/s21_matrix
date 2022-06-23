@@ -35,7 +35,10 @@ START_TEST(add_test) {
   d.matrix[2][1] = 4;
   d.matrix[2][2] = 4;
   int res = s21_sum_matrix(&a, &b, &c);
-  if (!res) ck_assert_int_eq(s21_eq_matrix(&c, &d), 1);
+  if (!res)
+    ck_assert_int_eq(s21_eq_matrix(&c, &d), 1);
+  else
+    ck_assert_int_eq(res, 0);
   s21_remove_matrix(&c);
   s21_remove_matrix(&a);
   s21_remove_matrix(&b);
@@ -68,15 +71,18 @@ START_TEST(sub_test) {
   b.matrix[2][2] = 1;
   d.matrix[0][0] = -2;
   d.matrix[0][1] = 0;
-  d.matrix[0][2] = 1;
+  d.matrix[0][2] = 2;
   d.matrix[1][0] = -2;
   d.matrix[1][1] = 0;
-  d.matrix[1][2] = 1;
+  d.matrix[1][2] = 2;
   d.matrix[2][0] = -2;
   d.matrix[2][1] = 0;
-  d.matrix[2][2] = 1;
+  d.matrix[2][2] = 2;
   int res = s21_sub_matrix(&a, &b, &c);
-  if (!res) ck_assert_int_eq(s21_eq_matrix(&c, &d), 1);
+  if (!res)
+    ck_assert_int_eq(s21_eq_matrix(&c, &d), 1);
+  else
+    ck_assert_int_eq(res, 0);
   s21_remove_matrix(&c);
   s21_remove_matrix(&a);
   s21_remove_matrix(&b);
@@ -108,7 +114,10 @@ START_TEST(mul_num) {
   d.matrix[2][1] = 4;
   d.matrix[2][2] = 6;
   int res = s21_mult_number(&a, b, &c);
-  if (!res) ck_assert_int_eq(s21_eq_matrix(&c, &d), 1);
+  if (!res)
+    ck_assert_int_eq(s21_eq_matrix(&c, &d), 1);
+  else
+    ck_assert_int_eq(res, 0);
   s21_remove_matrix(&c);
   s21_remove_matrix(&a);
   s21_remove_matrix(&d);
@@ -147,7 +156,10 @@ START_TEST(mul_matrix) {
   d.matrix[1][2] = 6;
   d.matrix[1][3] = 6;
   int res = s21_mult_matrix(&a, &b, &c);
-  if (!res) ck_assert_int_eq(s21_eq_matrix(&c, &d), 1);
+  if (!res)
+    ck_assert_int_eq(s21_eq_matrix(&c, &d), 1);
+  else
+    ck_assert_int_eq(res, 0);
   s21_remove_matrix(&c);
   s21_remove_matrix(&a);
   s21_remove_matrix(&b);
@@ -172,7 +184,10 @@ START_TEST(trans_test) {
   d.matrix[2][0] = 3;
   d.matrix[2][1] = 3;
   int res = s21_transpose(&a, &c);
-  if (!res) ck_assert_int_eq(s21_eq_matrix(&c, &d), 1);
+  if (!res)
+    ck_assert_int_eq(s21_eq_matrix(&c, &d), 1);
+  else
+    ck_assert_int_eq(res, 0);
   s21_remove_matrix(&c);
   s21_remove_matrix(&a);
   s21_remove_matrix(&d);
@@ -202,10 +217,51 @@ START_TEST(inv_test) {
   d.matrix[2][1] = -2.0 / 9;
   d.matrix[2][2] = -1.0 / 18;
   int res = s21_inverse_matrix(&a, &c);
-  if (!res) ck_assert_int_eq(s21_eq_matrix(&c, &d), 1);
+  if (!res)
+    ck_assert_int_eq(s21_eq_matrix(&c, &d), 1);
+  else
+    ck_assert_int_eq(res, 0);
   s21_remove_matrix(&c);
   s21_remove_matrix(&a);
   s21_remove_matrix(&d);
+}
+END_TEST
+
+START_TEST(eq_test) {
+  matrix_t a, c;
+  s21_create_matrix(2, 2, &a);
+  s21_create_matrix(2, 2, &c);
+  a.matrix[0][0] = NAN;
+  a.matrix[0][1] = 0;
+  a.matrix[1][0] = 0;
+  a.matrix[1][1] = 0;
+  c.matrix[0][0] = NAN;
+  c.matrix[0][1] = 1;
+  c.matrix[1][0] = 0;
+  c.matrix[1][1] = 0;
+  int res = s21_eq_matrix(&a, &c);
+  ck_assert_int_eq(res, 0);
+  s21_remove_matrix(&c);
+  s21_remove_matrix(&a);
+}
+END_TEST
+
+START_TEST(det_test) {
+  matrix_t a;
+  double b;
+  s21_create_matrix(5, 5, &a);
+  a.matrix[0][0] = -1;
+  a.matrix[0][1] = 20;
+  a.matrix[1][1] = 40;
+  a.matrix[1][3] = -2;
+  a.matrix[2][1] = 5;
+  a.matrix[2][2] = -45;
+  a.matrix[3][3] = 60;
+  a.matrix[3][4] = 6;
+  a.matrix[4][3] = 8;
+  s21_determinant(&a, &b);
+  ck_assert_double_eq_tol(b, -86400, 1e-6);
+  s21_remove_matrix(&a);
 }
 END_TEST
 
@@ -227,7 +283,7 @@ START_TEST(subnormal) {
   res = s21_mult_number(&a, i, NULL);
   ck_assert_int_eq(res, 1);
   res = s21_mult_number(&b, i, &c);
-  ck_assert_int_eq(res, 2);
+  ck_assert_int_eq(res, 1);
   res = s21_mult_matrix(&a, &b, &c);
   ck_assert_int_eq(res, 1);
   res = s21_mult_matrix(NULL, &d, &c);
@@ -246,6 +302,8 @@ START_TEST(subnormal) {
   ck_assert_int_eq(res, 1);
   res = s21_determinant(&a, &i);
   ck_assert_int_eq(res, 2);
+  res = s21_eq_matrix(&a, &b);
+  ck_assert_int_eq(res, 0);
 }
 END_TEST
 
@@ -262,6 +320,8 @@ int main(void) {
   tcase_add_test(tc1_1, mul_matrix);
   tcase_add_test(tc1_1, trans_test);
   tcase_add_test(tc1_1, inv_test);
+  tcase_add_test(tc1_1, eq_test);
+  tcase_add_test(tc1_1, det_test);
   tcase_add_test(tc1_1, subnormal);
 
   srunner_set_fork_status(sr, CK_NOFORK);

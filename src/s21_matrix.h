@@ -1,6 +1,7 @@
 #ifndef SRC_S21_MATRIX_H_
 #define SRC_S21_MATRIX_H_
 
+#include <math.h>
 #include <stdlib.h>
 
 #define SUCCESS 1
@@ -27,5 +28,6 @@ int s21_determinant(matrix_t *A, double *result);
 int s21_inverse_matrix(matrix_t *A, matrix_t *result);
 
 int check_matrix(matrix_t *a);
+void print_matrix(matrix_t *a);
 
 #endif  // SRC_S21_MATRIX_H_
